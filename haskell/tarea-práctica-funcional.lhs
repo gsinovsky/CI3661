@@ -126,7 +126,15 @@ En particular,
 **Ejercicio 3** (0.25 puntos): Complete la siguiente definición que calcule la cantidad de operaciones aritméticas especificadas en una expresión aritmética.  Se considera que la expresión correspondiente a un simple literal especifica cero operaciones.
 
 > operaciones :: Expresión -> Integer
-> operaciones = undefined
+> operaciones
+>   = \ case
+>     Suma           e1 e2 -> 1 + (operaciones e1) + (operaciones e2)
+>     Resta          e1 e2 -> 1 + (operaciones e1) + (operaciones e2)
+>     Multiplicación e1 e2 -> 1 + (operaciones e1) + (operaciones e2)
+>     División       e1 e2 -> 1 + (operaciones e1) + (operaciones e2)
+>     Negativo       e     -> 1 + (operaciones e)
+>     Literal        n     -> 0
+
 
 En particular,
 
@@ -139,7 +147,14 @@ En particular,
 **Ejercicio 4** (0.25 puntos): Complete la siguiente definición que calcule la suma de todos los literales presentes en una expresión aritmética.
 
 > sumaLiterales :: Expresión -> Integer
-> sumaLiterales = undefined
+> sumaLiterales
+>   = \ case
+>     Suma           e1 e2 -> (sumaLiterales e1) + (sumaLiterales e2)
+>     Resta          e1 e2 -> (sumaLiterales e1) + (sumaLiterales e2)
+>     Multiplicación e1 e2 -> (sumaLiterales e1) + (sumaLiterales e2)
+>     División       e1 e2 -> (sumaLiterales e1) + (sumaLiterales e2)
+>     Negativo       e     -> sumaLiterales e
+>     Literal        n     -> n
 
 En particular,
 
@@ -152,7 +167,14 @@ En particular,
 **Ejercicio 5** (0.25 puntos): Complete la siguiente definición que calcule la lista de todos los literales presentes en una expresión aritmética.
 
 > literales :: Expresión -> [Integer]
-> literales = undefined
+> literales
+>   = \ case
+>     Suma           e1 e2 -> (literales e1) ++ (literales e2)
+>     Resta          e1 e2 -> (literales e1) ++ (literales e2)
+>     Multiplicación e1 e2 -> (literales e1) ++ (literales e2)
+>     División       e1 e2 -> (literales e1) ++ (literales e2)
+>     Negativo       e     -> literales e
+>     Literal        n     -> [n]
 
 En particular,
 
@@ -164,8 +186,16 @@ En particular,
 
 **Ejercicio 6** (0.25 puntos): Complete la siguiente definición que calcule la altura de una expresión aritmética.  Se considera que un literal es una expresión aritmética de altura cero, y que todas las demás operaciones agregan uno a la altura.
 
+
 > altura :: Expresión -> Integer
-> altura = undefined
+> altura
+>   = \ case
+>     Suma           e1 e2 -> 1 + (altura e1) `max`(altura e2)
+>     Resta          e1 e2 -> 1 + (altura e1) `max` (altura e2)
+>     Multiplicación e1 e2 -> 1 + (altura e1) `max` (altura e2)
+>     División       e1 e2 -> 1 + (altura e1) `max` (altura e2)
+>     Negativo       e     -> 1 + (altura e)
+>     Literal        n     -> 0
 
 En particular,
 
@@ -204,27 +234,51 @@ En efecto, todo catamorfismo se construye de la misma forma para un tipo algebra
 >   división
 >   negativo
 >   literal
->   = undefined
+>       = \ case 
+>         Suma e1 e2 -> suma (f e1) (f e2)
+>         Resta e1 e2 -> resta (f e1) (f e2)
+>         Multiplicación e1 e2 -> multiplicación (f e1) (f e2)
+>         División e1 e2 -> división (f e1) (f e2)
+>         Negativo e1 -> negativo (f e1)
+>         Literal n  -> literal n
+>   where f = cataExpresión suma resta multiplicación división negativo literal
 
----
+
 
 **Ejercicio 8** (0.2 puntos cada una; 1 punto en total): Complete las siguientes definiciones para los catamorfismos que definió en las preguntas anteriores, esta vez en términos de `cataExpresión`.
 
 > evaluar' :: Expresión -> Double
-> evaluar' = undefined
+> evaluar' = cataExpresión (+) (-) (*) (/) negate fromIntegral
 >
 > operaciones' :: Expresión -> Integer
-> operaciones' = undefined
+> operaciones' = cataExpresión suma resta multiplicacion division negativo literal
+>     where suma a b = 1 + a + b
+>           resta a b = 1 + a + b
+>           multiplicacion a b = 1 + a + b
+>           division a b = 1 + a + b
+>           negativo a = 1 + a
+>           literal n = 0
 >
 > sumaLiterales' :: Expresión -> Integer
-> sumaLiterales' = undefined
+> sumaLiterales' = cataExpresión (+) (+) (+) (+) id id
 >
 > literales' :: Expresión -> [Integer]
-> literales' = undefined
+> literales' = cataExpresión suma resta multiplicacion division negativo literal
+>     where suma a b = a ++ b
+>           resta a b = a ++ b
+>           multiplicacion a b = a ++ b
+>           division a b = a ++ b
+>           negativo a = a
+>           literal n = [n]
 >
 > altura' :: Expresión -> Integer
-> altura' = undefined
-
+> altura' = cataExpresión suma resta multiplicacion division negativo literal
+>     where suma a b = 1 + a `max` b
+>           resta a b = 1 + a `max` b
+>           multiplicacion a b = 1 + a `max` b
+>           division a b = 1 + a `max` b 
+>           negativo a = 1 + a
+>           literal n = 0
 
 
 ---
