@@ -1,2 +1,2 @@
 # CI3661
-Repositorio para la increíble tarea de Haskell de Gustavo y Jonathan
+Repositorio para las increíbles tareas de Lenguajes de Gustavo y Jonathan
