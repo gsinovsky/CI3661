@@ -84,9 +84,9 @@ Considere la siguiente declaración de un tipo algebráico para representar expr
 ----- --- ---
 
 > t1, t2, t3 :: Expresión
-> t1 = undefined
-> t2 = undefined
-> t3 = undefined
+> t1 = Literal 42
+> t2 = Suma t1 (Literal 27)
+> t3 = Suma (Multiplicación t2 (Multiplicación t2 (Literal 1))) (Negativo (División (Suma t1 (Literal 0)) (Literal 3)))
 
 ---
 
@@ -108,12 +108,12 @@ En el contexto de *Haskell*, un **catamorfismo** es cualquier transformación de
 > evaluar :: Expresión -> Double
 > evaluar
 >   = \ case
->     Suma           e1 e2 -> undefined
->     Resta          e1 e2 -> undefined
->     Multiplicación e1 e2 -> undefined
->     División       e1 e2 -> undefined
->     Negativo       e     -> undefined
->     Literal        n     -> undefined
+>     Suma           e1 e2 -> (evaluar e1) + (evaluar e2)
+>     Resta          e1 e2 -> (evaluar e1) - (evaluar e2)
+>     Multiplicación e1 e2 -> (evaluar e1) * (evaluar e2)
+>     División       e1 e2 -> (evaluar e1) / (evaluar e2)
+>     Negativo       e     -> negate (evaluar e)
+>     Literal        n     -> fromIntegral n
 
 En particular,
 
