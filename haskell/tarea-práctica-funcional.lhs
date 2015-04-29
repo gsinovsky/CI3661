@@ -318,10 +318,10 @@ Combinadores
 [^sufijos]: Se utiliza el sufijo `E` para evitar conflictos con los nombres `head` y `div` importados implícitamente desde el módulo `Prelude` de *Haskell*.
 
 > htmlE, headE, bodyE, divE :: [Elemento] -> Elemento
-> htmlE  = undefined
-> headE  = undefined
-> bodyE  = undefined
-> divE   = undefined
+> htmlE  = Elemento "<html>" (Data.Map.singleton "xmlns" "http://www.w3.org/1999/xhtml")
+> headE  = Elemento "<head>" empty 
+> bodyE  = Elemento "<body>" empty
+> divE   = Elemento "<div>" empty 
 
 ---
 
