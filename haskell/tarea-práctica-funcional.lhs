@@ -52,7 +52,7 @@ En esta sección puede agregar todas las directivas necesarias para importar sí
 > import Control.Applicative (pure)
 > import Control.DeepSeq     (NFData, ($!!))
 > import Control.Monad       (void)
-> import Data.Map            (Map, empty, singleton)
+> import Data.Map            (Map, empty, singleton, toList, assocs)
 > import GHC.Generics        (Generic)
 > import System.Environment  (getArgs, getProgName)
 > import System.IO           (hPutStrLn, stderr)
@@ -358,7 +358,15 @@ Se desea usar el método `render` para generar texto XHTML a partir de un valor 
 
 > instance RenderXHTML Documento where
 >   render (Documento raíz)
->     = undefined
+>     = encabezado ++ render raíz
+>     where
+>       encabezado
+>         = unlines
+>           [ "<?xml version='1.0' encoding='UTF-8'?>"
+>           , "<!DOCTYPE html"
+>           , "     PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'"
+>           , "     'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>"
+>           ]
 
 ---
 
@@ -378,10 +386,18 @@ debe generar el texto
 
 El orden en que genere las especificaciones de atributos es irrelevante.
 
-> instance RenderXHTML Atributos where
->   render = undefined
+-- Funcion auxiliar para hacer el fold a la lista generada a partir del diccionario
 
----
+> aux :: [(String,String)] -> String
+> aux = foldr(\x acc -> (" " ++ (fst x) ++ "=" ++ "'" ++(snd x)++"'")++acc ) "" 
+
+----------
+
+
+> instance RenderXHTML Atributos where
+>   render x  = if x== empty then "" else aux $ Data.Map.assocs x
+
+
 
 **Ejercicio 13** (1.25 puntos): Escriba una instancia de la clase `RenderXHTML` para el tipo `Elemento`.  Puede suponer que los nombres de etiquetas de los elementos siempre son válidos para XHTML, y que los nodos de texto no contienen entidades ilegales ni caracteres reservados por XHTML — es decir, no es necesario que se preocupe por escapar el texto obtenido del elemento.
 
@@ -391,10 +407,40 @@ El texto generado debe corresponder a una etiqueta XHTML para el elemento dado. 
 
 o cualquier texto con el mismo significado en XHTML — el espacio en blanco, por ejemplo, es irrelevante.
 
+--Funciones auxiliares 
+
+> obtenerEtiqueta:: Elemento -> String
+> obtenerEtiqueta (Elemento x _ _) = x
+> obtenerEtiqueta (Texto _) = ""
+
+> obtenerAtrib:: Elemento -> Atributos
+> obtenerAtrib (Elemento _ x _) = x
+> obtenerAtrib (Texto _) = empty
+
+> obtenerElemL:: Elemento -> [Elemento]
+> obtenerElemL (Elemento _ _ x) = x
+> obtenerElemL (Texto _) = []
+
+> obtenerTexto:: Elemento -> String
+> obtenerTexto (Elemento _ _ _) = ""
+> obtenerTexto (Texto x) = x 
+
+-- Es necesario poder hacer render a la lista de elementos, por
+-- eso se emplea esta funcion donde se instancia render a [Elemento]
+
+> instance RenderXHTML [Elemento] where
+>   render [] = ""
+>   render [x] = (obtenerTexto x) ++ 
+>       if  (obtenerEtiqueta x) /= "" then "<" ++ (obtenerEtiqueta x) 
+>           ++ (render $ obtenerAtrib x) ++ ">" ++ (render $ obtenerElemL x) ++ "</" ++ (obtenerEtiqueta x) ++ ">"
+>           else ""
+>   render (x:xs) = (obtenerTexto x) ++ 
+>       if  (obtenerEtiqueta x) /= "" then "<" ++ (obtenerEtiqueta x)
+>           ++ (render $ obtenerAtrib x) ++ ">" ++ (render $ obtenerElemL x) ++ "</" ++ (obtenerEtiqueta x) ++ ">" ++ render xs
+>           else "" ++ render xs
+
 > instance RenderXHTML Elemento where
->   render = undefined
-
-
+>   render x = render [x] 
 
 ---
 
