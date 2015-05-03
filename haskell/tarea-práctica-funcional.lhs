@@ -327,18 +327,18 @@ Combinadores
 
 **Ejercicio 10** (0.15 puntos cada una; 0.6 puntos en total): Complete las siguientes definiciones para combinadores que produzcan representaciones de los elementos de XHTML `title`, `style`, `h1` y `p` a partir de un `String` con el texto que debe incluirse dentro de ellos.  Los elementos resultantes de aplicar estos combinadores deben tener diccionarios de atributos vacíos, salvo el elemento `style` que debe tener el atributo `type` asociado al texto `text/css`.
 
-> styleE, titleE, h1E :: String -> Elemento
-> styleE = undefined
-> titleE = undefined
-> h1E    = undefined
-> pE     = undefined
+> styleE, titleE, h1E,pE :: String -> Elemento
+> styleE t= Elemento "<style>" (Data.Map.singleton "type" "text/css") [Texto t]
+> titleE t= Elemento "<title>" empty [Texto t]
+> h1E t   = Elemento "<h1>" empty [Texto t]
+> pE t    = Elemento "<p>" empty [Texto t]
 
 ---
 
 **Ejercicio 11** (0.2 puntos): Complete la siguiente definición para un combinador que produzca una representación del elemento de XHTML `p` a partir de un valor de cualquier tipo `a` que pertenezca a la clase de tipos `Show`; el elemento `p` resultante de aplicar este combinador debe contener únicamente un nodo de texto cuyo `String` sea el resultante de aplicar la función `show` al valor pasado como parámetro, y debe tener su diccionario de atributos vacío.
 
 > showP :: Show a => a -> Elemento
-> showP = undefined
+> showP a = pE $ show a
 
 ---
 
