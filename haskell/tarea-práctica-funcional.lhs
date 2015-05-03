@@ -502,7 +502,18 @@ Antes de cada una de esas secciones, incluya un elemento `h1` con el nombre de l
 [^t3xhtml]: Ese ejemplo fue generado a partir de la expresión `t3`.
 
 > expresiónDocumento :: Expresión -> Documento
-> expresiónDocumento e = Documento (htmlE [expresiónXHTML e])
+> expresiónDocumento e = Documento (
+>     htmlE [headE [titleE "Expresión", styleE estilo], 
+>          bodyE [
+>                  h1E "Expresión original", showP e, 
+>                  h1E "Estructura", expresiónXHTML e, 
+>                  h1E "Valor", showP (evaluar e), 
+>                  h1E "Altura", showP (altura e),
+>                  h1E "Número de operaciones", showP (operaciones e),
+>                  h1E "Literales", showP (literales' e)
+>                ]
+>            ])
+
 
 La siguiente definición contiene el texto necesario a incluir en el elemento `style` del documento a generar.  El elemento `style` con este contenido debe ser incluido en el elemento `head` del documento generado.
 
