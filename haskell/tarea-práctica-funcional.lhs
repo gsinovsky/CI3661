@@ -336,9 +336,15 @@ Combinadores
 ---
 
 **Ejercicio 11** (0.2 puntos): Complete la siguiente definición para un combinador que produzca una representación del elemento de XHTML `p` a partir de un valor de cualquier tipo `a` que pertenezca a la clase de tipos `Show`; el elemento `p` resultante de aplicar este combinador debe contener únicamente un nodo de texto cuyo `String` sea el resultante de aplicar la función `show` al valor pasado como parámetro, y debe tener su diccionario de atributos vacío.
-
+ 
 > showP :: Show a => a -> Elemento
-> showP a = pE $ show a
+> showP a
+>   | (fst var) == "Texto" = pE (takeWhile (/= '"') $ drop 1 $ dropWhile (/= '"') (snd var)) 
+>   | (fst var) == "Elemento" = pE (takeWhile (/= '"') $ drop 1 $ dropWhile (/= '"') (snd var))
+>   | otherwise = pE (show a)
+>   where 
+>       var = splitAt 5 (show a)
+>       var2 = splitAt 8 (show a)
 
 ---
 
@@ -496,7 +502,7 @@ Antes de cada una de esas secciones, incluya un elemento `h1` con el nombre de l
 [^t3xhtml]: Ese ejemplo fue generado a partir de la expresión `t3`.
 
 > expresiónDocumento :: Expresión -> Documento
-> expresiónDocumento e = undefined
+> expresiónDocumento e = Documento (htmlE [expresiónXHTML e])
 
 La siguiente definición contiene el texto necesario a incluir en el elemento `style` del documento a generar.  El elemento `style` con este contenido debe ser incluido en el elemento `head` del documento generado.
 
