@@ -466,12 +466,12 @@ Escriba su definición en términos de `cataExpresión` y utilice los combinador
 
 > expresiónXHTML :: Expresión -> Elemento
 > expresiónXHTML = cataExpresión suma resta multiplicacion division negativo literal
->     where suma a b = divE [showP a, pE "+", showP b]
->           resta a b = divE [showP a, pE "-", showP b]
->           multiplicacion a b = divE [showP a, pE "*", showP b]
->           division a b = divE [showP a, pE "/", showP b]
->           negativo a = divE [pE "-", showP a]
->           literal n = Texto (show n)
+>     where suma a b = divE  [a, pE "+", b]
+>           resta a b = divE [a, pE "-", b]
+>           multiplicacion a b = divE  [a, pE "*", b]
+>           division a b = divE  [a, pE "/", b]
+>           negativo a = divE [pE "-", a]
+>           literal n = showP n
 
 
 Por ejemplo, el resultado de `expresiónXHTML t2` debería ser igual al de
