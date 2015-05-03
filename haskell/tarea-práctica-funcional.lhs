@@ -318,20 +318,20 @@ Combinadores
 [^sufijos]: Se utiliza el sufijo `E` para evitar conflictos con los nombres `head` y `div` importados implícitamente desde el módulo `Prelude` de *Haskell*.
 
 > htmlE, headE, bodyE, divE :: [Elemento] -> Elemento
-> htmlE  = Elemento "<html>" (Data.Map.singleton "xmlns" "http://www.w3.org/1999/xhtml")
-> headE  = Elemento "<head>" empty 
-> bodyE  = Elemento "<body>" empty
-> divE   = Elemento "<div>" empty 
+> htmlE  = Elemento "html" (Data.Map.singleton "xmlns" "http://www.w3.org/1999/xhtml")
+> headE  = Elemento "head" empty 
+> bodyE  = Elemento "body" empty
+> divE   = Elemento "div" empty 
 
 ---
 
 **Ejercicio 10** (0.15 puntos cada una; 0.6 puntos en total): Complete las siguientes definiciones para combinadores que produzcan representaciones de los elementos de XHTML `title`, `style`, `h1` y `p` a partir de un `String` con el texto que debe incluirse dentro de ellos.  Los elementos resultantes de aplicar estos combinadores deben tener diccionarios de atributos vacíos, salvo el elemento `style` que debe tener el atributo `type` asociado al texto `text/css`.
 
 > styleE, titleE, h1E,pE :: String -> Elemento
-> styleE t= Elemento "<style>" (Data.Map.singleton "type" "text/css") [Texto t]
-> titleE t= Elemento "<title>" empty [Texto t]
-> h1E t   = Elemento "<h1>" empty [Texto t]
-> pE t    = Elemento "<p>" empty [Texto t]
+> styleE t = Elemento "style" (Data.Map.singleton "type" "text/css") [Texto t]
+> titleE t = Elemento "title" Data.Map.empty [Texto t]
+> h1E t    = Elemento "h1" Data.Map.empty [Texto t]
+> pE t     = Elemento "p" Data.Map.empty [Texto t]
 
 ---
 
@@ -411,8 +411,16 @@ Las operaciones aritméticas deben representarse con un elemento `div` que conte
 
 Escriba su definición en términos de `cataExpresión` y utilice los combinadores para elementos de XHTML que definió previamente.
 
+
 > expresiónXHTML :: Expresión -> Elemento
-> expresiónXHTML = undefined
+> expresiónXHTML = cataExpresión suma resta multiplicacion division negativo literal
+>     where suma a b = divE [showP a, pE "+", showP b]
+>           resta a b = divE [showP a, pE "-", showP b]
+>           multiplicacion a b = divE [showP a, pE "*", showP b]
+>           division a b = divE [showP a, pE "/", showP b]
+>           negativo a = divE [pE "-", showP a]
+>           literal n = Texto (show n)
+
 
 Por ejemplo, el resultado de `expresiónXHTML t2` debería ser igual al de
 
