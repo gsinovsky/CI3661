@@ -4,8 +4,8 @@
 
 Integrantes del grupo:
 
-*   XX-XXXXX <foo@baz.quux>
-*   YY-YYYYY <bar@baz.quux>
+*   09-11207 <gsinovsky@gmail.com>
+*   07-41249 <jotha41@gmail.com>
 
 
 
