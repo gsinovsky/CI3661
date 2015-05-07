@@ -3,6 +3,7 @@ module Imagen
   , colorPromedio
   , subImagen
   , getDatos
+  , hSplit
   )
   where
 
@@ -24,7 +25,11 @@ getDatos :: Imagen -> [[Color]]
 getDatos (Imagen _ _ m) = m
 
 hSplit :: Imagen -> (Imagen, Imagen)
-hSplit = undefined
+hSplit (Imagen anchura' altura' img) = 
+	(Imagen anchura' (altura' `div` 2) superior, Imagen anchura' (altura' `div` 2) inferior)
+     where division = splitAt ((length img + 1) `div` 2) img;
+     	     superior = fst (division);
+           inferior = snd (division)
 
 vSplit :: Imagen -> (Imagen, Imagen)
 vSplit = undefined
