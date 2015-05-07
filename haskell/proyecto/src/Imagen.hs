@@ -1,6 +1,7 @@
 module Imagen
   ( hSplit, vSplit
   , colorPromedio
+  , subImagen
   )
   where
 
@@ -13,8 +14,9 @@ subImagen
   -> Integer -> Integer
   -> Imagen -> Imagen
 
-subImagen = undefined
-
+subImagen xInicial yInicial anchura' altura' imagen
+     = Imagen anchura' altura' (subLista (datos imagen))
+     where subLista = take (fromIntegral altura') . drop (fromIntegral xInicial) 
 
 
 hSplit :: Imagen -> (Imagen, Imagen)

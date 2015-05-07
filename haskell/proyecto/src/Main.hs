@@ -5,6 +5,7 @@ import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos), leerIm
 import Graphics.Mosaico.Ventana  (Ventana, cerrar, crearVentana, leerTecla, mostrar)
 
 import Diagramas (Orientación(Horizontal, Vertical), caminar, dividir, rectánguloImagen, sustituir)
+import Imagen (subImagen)
 
 ciclo :: Ventana -> Diagrama -> [Paso] -> IO ()
 ciclo = undefined
