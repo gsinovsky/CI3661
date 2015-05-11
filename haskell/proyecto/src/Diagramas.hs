@@ -16,7 +16,7 @@ import Imagen (colorPromedio, hSplit, vSplit)
 
 
 rectánguloImagen :: Imagen -> Rectángulo
-rectánguloImagen = undefined
+rectánguloImagen  i = Rectángulo (colorPromedio i) i 
 
 data Orientación
   = Horizontal
