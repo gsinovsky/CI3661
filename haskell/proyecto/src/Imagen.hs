@@ -25,14 +25,29 @@ getDatos :: Imagen -> [[Color]]
 getDatos (Imagen _ _ m) = m
 
 hSplit :: Imagen -> (Imagen, Imagen)
-hSplit (Imagen anchura' altura' img) = 
-	(Imagen anchura' (altura' `div` 2) superior, Imagen anchura' (altura' `div` 2) inferior)
-     where division = splitAt ((length img + 1) `div` 2) img;
-     	     superior = fst (division);
-           inferior = snd (division)
+hSplit imagen = (superior, inferior)
+      where superior = subImagen 0 0 anchura' medio imagen
+            inferior = subImagen 0 medio anchura' (altura'-medio) imagen
+            anchura' = anchura imagen
+            altura' = altura imagen
+            medio = (altura'+1) `div` 2
+
 
 vSplit :: Imagen -> (Imagen, Imagen)
-vSplit = undefined
+vSplit imagen = (superior, inferior)
+      where superior = subImagen 0 0 medio altura' imagen
+            inferior = subImagen medio 0 (anchura'-medio) altura' imagen
+            anchura' = anchura imagen
+            altura' = altura imagen
+            medio = (anchura'+1) `div` 2
+
+
 
 colorPromedio :: Imagen -> Color
-colorPromedio = undefined
+colorPromedio i = promedio 0 0 0 0 . concat . datos  $ i
+     where promedio :: Integer -> Integer -> Integer -> Integer -> [Color] -> Color
+           promedio r v a n [] = Color { rojo  = round ((fromInteger r) / (fromInteger n))
+                                       , verde = round ((fromInteger v) / (fromInteger n))
+                                       , azul  = round ((fromInteger a) / (fromInteger n))
+                                       }
+           promedio r v a n (Color r' v' a' : cs) = promedio (r + (fromIntegral r')) (v + (fromIntegral v')) (a+(fromIntegral a')) (n+1) cs
