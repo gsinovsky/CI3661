@@ -44,5 +44,22 @@ caminar (Segundo:xs) (_ :|: s) = caminar xs s
 
 
 sustituir :: Diagrama -> [Paso] -> Diagrama -> Maybe Diagrama
-sustituir = undefined
+sustituir d' [] _ = Just d'
+sustituir _ _ (Hoja _) = Nothing
+sustituir d' (Primero:xs) (p :-: s) = 
+  case sustituir d' xs p of
+    Just p' -> Just $ p' :-: s
+    Nothing -> Nothing
+sustituir d' (Primero:xs) (p :|: s) =
+    case sustituir d' xs p of
+    Just p' -> Just $ p' :|: s
+    Nothing -> Nothing
+sustituir d' (Segundo:xs) (p :-: s) =
+    case sustituir d' xs s of
+    Just s' -> Just $ p :-: s'
+    Nothing -> Nothing
+sustituir d' (Segundo:xs) (p :|: s) =
+    case sustituir d' xs s of
+    Just s' -> Just $ p :|: s'
+    Nothing -> Nothing
 
