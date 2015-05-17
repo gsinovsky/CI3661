@@ -5,7 +5,7 @@ import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos), leerIm
 import Graphics.Mosaico.Ventana  (Ventana, cerrar, crearVentana, leerTecla, mostrar)
 
 import Diagramas (Orientación(Horizontal, Vertical), caminar, dividir, rectánguloImagen, sustituir)
-import Imagen (subImagen, getDatos, hSplit)
+import Imagen (subImagen, getDatos, hSplit,vSplit, colorPromedio)
 import Graphics.Mosaico.Imagen (Color(Color, rojo, verde, azul), Imagen(Imagen, altura, anchura, datos))
 
 ciclo :: Ventana -> Diagrama -> [Paso] -> IO ()

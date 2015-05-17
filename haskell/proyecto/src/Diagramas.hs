@@ -11,7 +11,7 @@ module
 import Graphics.Mosaico.Diagrama (Diagrama((:-:), (:|:), Hoja), Paso(Primero, Segundo), Rectángulo(Rectángulo, color, imagen))
 import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos))
 
-import Imagen (colorPromedio, hSplit, vSplit)
+import Imagen (colorPromedio, hSplit, vSplit,vSplit, colorPromedio)
 
 
 
