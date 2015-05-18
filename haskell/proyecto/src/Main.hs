@@ -23,8 +23,28 @@ ciclo ventana diagrama pasos = do
     	auxiliar tecla'
     	 = case tecla' of
     	 	"BackSpace" -> (diagrama, init pasos)
-    	 	-- aqui hay que poner el resto de los casos, todavía no sé como jaja
-    	 	_ -> (diagrama, init pasos) 
+    	 	"Up" -> case caminar pasos diagrama of
+    	 		Just (Hoja rectángulo) ->
+    	 		     case dividir Horizontal rectángulo of 
+    	 		     	Nothing -> quedarse
+    	 		     	Just d' -> case sustituir d' pasos diagrama of
+    	 		     		Nothing -> quedarse
+    	 		     		Just diagrama' -> (diagrama', pasos++[Primero])
+ 		     	Just (_ :-: _) -> (diagrama, pasos++[Primero])
+ 		     	Just (_ :|: _) -> quedarse
+    	 	"Down" -> case caminar pasos diagrama of
+    	 		Just (Hoja rectángulo) ->
+    	 		     case dividir Horizontal rectángulo of 
+    	 		     	Nothing -> quedarse
+    	 		     	Just d' -> case sustituir d' pasos diagrama of
+    	 		     		Nothing -> quedarse
+    	 		     		Just diagrama' -> (diagrama', pasos++[Segundo])
+ 		     	Just (_ :-: _) -> (diagrama, pasos++[Segundo])
+ 		     	Just (_ :|: _) -> quedarse 		     	
+    	 	_ -> quedarse
+
+    	 	where 
+    	 		quedarse = (diagrama, pasos)
 
 
 main :: IO ()
