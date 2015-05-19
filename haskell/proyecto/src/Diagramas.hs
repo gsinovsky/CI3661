@@ -11,8 +11,8 @@ module
 import Graphics.Mosaico.Diagrama (Diagrama((:-:), (:|:), Hoja), Paso(Primero, Segundo), Rectángulo(Rectángulo, color, imagen))
 import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos))
 
-import Imagen (colorPromedio, hSplit, vSplit,vSplit, colorPromedio)
-  
+import Imagen (colorPromedio, hSplit, vSplit)
+
 
 
 rectánguloImagen :: Imagen -> Rectángulo
@@ -41,28 +41,8 @@ caminar (Primero:xs) (p :|: _) = caminar xs p
 caminar (Segundo:xs) (_ :-: s) = caminar xs s
 caminar (Segundo:xs) (_ :|: s) = caminar xs s
 
-sustituir :: Diagrama -> [Paso] -> Diagrama -> Maybe Diagrama
-sustituir _ [] d' = Just d'
-sustituir _ _ (Hoja _) = Nothing
-sustituir d' (Primero:xs) (p :-: s) = 
-  case sustituir d' xs p of
-    Just p' -> Just $ p' :-: s
-    Nothing -> Nothing
-sustituir d' (Primero:xs) (p :|: s) =
-    case sustituir d' xs p of
-    Just p' -> Just $ p' :|: s
-    Nothing -> Nothing
-sustituir d' (Segundo:xs) (p :-: s) =
-    case sustituir d' xs s of
-    Just s' -> Just $ p :-: s'
-    Nothing -> Nothing
-sustituir d' (Segundo:xs) (p :|: s) =
-    case sustituir d' xs s of
-    Just s' -> Just $ p :|: s'
-    Nothing -> Nothing
 
 
-{-
 sustituir :: Diagrama -> [Paso] -> Diagrama -> Maybe Diagrama
 sustituir d' [] _ = Just d'
 sustituir _ _ (Hoja _) = Nothing
@@ -82,4 +62,3 @@ sustituir d' (Segundo:xs) (p :|: s) =
     case sustituir d' xs s of
     Just s' -> Just $ p :|: s'
     Nothing -> Nothing
--}

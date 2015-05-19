@@ -23,4 +23,5 @@ executable mosaico
 --other-extensions:
   build-depends:
     base        >= 4.7 && < 4.8,
-    mosaico-lib >= 0.1 && < 0.2
+    mosaico-lib >= 0.1 && < 0.2,
+    Safe >= 0.1

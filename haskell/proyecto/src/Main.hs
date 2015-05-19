@@ -4,9 +4,10 @@ import Graphics.Mosaico.Diagrama (Diagrama((:-:), (:|:), Hoja), Paso(Primero, Se
 import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos), leerImagen)
 import Graphics.Mosaico.Ventana  (Ventana, cerrar, crearVentana, leerTecla, mostrar)
 import System.Environment (getArgs)
+import Safe (initSafe)
 
 import Diagramas (Orientación(Horizontal, Vertical), caminar, dividir, rectánguloImagen, sustituir)
-import Imagen (subImagen, getDatos, hSplit,vSplit, colorPromedio)
+import Imagen (subImagen, hSplit,vSplit, colorPromedio)
 import Graphics.Mosaico.Imagen (Color(Color, rojo, verde, azul), Imagen(Imagen, altura, anchura, datos))
 
 ciclo :: Ventana -> Diagrama -> [Paso] -> IO ()
@@ -14,37 +15,55 @@ ciclo ventana diagrama pasos = do
 	mostrar ventana pasos diagrama
 	tecla <- leerTecla ventana
 	case tecla of
-		Just "q" -> cerrar ventana
 		Nothing -> return ()
+		Just "q" -> cerrar ventana
 		Just tecla' -> 
 		     let (diagrama', pasos') = auxiliar tecla' 
 		      in ciclo ventana diagrama' pasos'
     where
     	auxiliar tecla'
     	 = case tecla' of
-    	 	"BackSpace" -> (diagrama, init pasos)
+    	 	"BackSpace" -> (diagrama, initSafe pasos)
     	 	"Up" -> case caminar pasos diagrama of
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Horizontal rectángulo of 
-    	 		     	Nothing -> quedarse
+    	 		     	Nothing -> pararse
     	 		     	Just d' -> case sustituir d' pasos diagrama of
-    	 		     		Nothing -> quedarse
+    	 		     		Nothing -> pararse
     	 		     		Just diagrama' -> (diagrama', pasos++[Primero])
  		     	Just (_ :-: _) -> (diagrama, pasos++[Primero])
- 		     	Just (_ :|: _) -> quedarse
+ 		     	Just (_ :|: _) -> pararse
     	 	"Down" -> case caminar pasos diagrama of
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Horizontal rectángulo of 
-    	 		     	Nothing -> quedarse
+    	 		     	Nothing -> pararse
     	 		     	Just d' -> case sustituir d' pasos diagrama of
-    	 		     		Nothing -> quedarse
+    	 		     		Nothing -> pararse
     	 		     		Just diagrama' -> (diagrama', pasos++[Segundo])
  		     	Just (_ :-: _) -> (diagrama, pasos++[Segundo])
- 		     	Just (_ :|: _) -> quedarse 		     	
-    	 	_ -> quedarse
+ 		     	Just (_ :|: _) -> pararse
+    	 	"Left" -> case caminar pasos diagrama of
+    	 		Just (Hoja rectángulo) ->
+    	 		     case dividir Vertical rectángulo of 
+    	 		     	Nothing -> pararse
+    	 		     	Just d' -> case sustituir d' pasos diagrama of
+    	 		     		Nothing -> pararse
+    	 		     		Just diagrama' -> (diagrama', pasos++[Primero])
+ 		     	Just (_ :-: _) -> pararse
+ 		     	Just (_ :|: _) -> (diagrama, pasos++[Primero])
+    	 	"Right" -> case caminar pasos diagrama of
+    	 		Just (Hoja rectángulo) ->
+    	 		     case dividir Vertical rectángulo of 
+    	 		     	Nothing -> pararse
+    	 		     	Just d' -> case sustituir d' pasos diagrama of
+    	 		     		Nothing -> pararse
+    	 		     		Just diagrama' -> (diagrama', pasos++[Segundo])
+ 		     	Just (_ :-: _) -> pararse
+ 		     	Just (_ :|: _) -> (diagrama, pasos++[Segundo]) 	 		     	 	 		     	 		     	
+    	 	_ -> pararse
 
     	 	where 
-    	 		quedarse = (diagrama, pasos)
+    	 		pararse = (diagrama, pasos)
 
 
 main :: IO ()
