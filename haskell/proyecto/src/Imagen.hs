@@ -6,7 +6,7 @@ module Imagen
   )
   where
 
-import Data.List (genericTake, genericDrop, genericLength)
+import Data.List (genericTake, genericDrop)
 import Graphics.Mosaico.Imagen (Color(Color, rojo, verde, azul), Imagen(Imagen, altura, anchura, datos))
 
 getDatos :: Imagen -> [[Color]]

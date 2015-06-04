@@ -1,14 +1,13 @@
 module Main (main) where
 
 import Graphics.Mosaico.Diagrama (Diagrama((:-:), (:|:), Hoja), Paso(Primero, Segundo))
-import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos), leerImagen)
+import Graphics.Mosaico.Imagen   (Imagen(Imagen, altura, anchura, datos), Color(Color, rojo, verde, azul), leerImagen)
 import Graphics.Mosaico.Ventana  (Ventana, cerrar, crearVentana, leerTecla, mostrar)
 import System.Environment (getArgs)
 import Safe (initSafe)
 
 import Diagramas (Orientación(Horizontal, Vertical), caminar, dividir, rectánguloImagen, sustituir)
-import Imagen (subImagen, hSplit,vSplit, colorPromedio)
-import Graphics.Mosaico.Imagen (Color(Color, rojo, verde, azul), Imagen(Imagen, altura, anchura, datos))
+
 
 ciclo :: Ventana -> Diagrama -> [Paso] -> IO ()
 ciclo ventana diagrama pasos = do
@@ -25,6 +24,7 @@ ciclo ventana diagrama pasos = do
     	 = case tecla' of
     	 	"BackSpace" -> (diagrama, initSafe pasos)
     	 	"Up" -> case caminar pasos diagrama of
+    	 		Nothing -> pararse
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Horizontal rectángulo of 
     	 		     	Nothing -> pararse
@@ -34,6 +34,7 @@ ciclo ventana diagrama pasos = do
  		     	Just (_ :-: _) -> (diagrama, pasos++[Primero])
  		     	Just (_ :|: _) -> pararse
     	 	"Down" -> case caminar pasos diagrama of
+    	 		Nothing -> pararse
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Horizontal rectángulo of 
     	 		     	Nothing -> pararse
@@ -43,6 +44,7 @@ ciclo ventana diagrama pasos = do
  		     	Just (_ :-: _) -> (diagrama, pasos++[Segundo])
  		     	Just (_ :|: _) -> pararse
     	 	"Left" -> case caminar pasos diagrama of
+    	 		Nothing -> pararse
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Vertical rectángulo of 
     	 		     	Nothing -> pararse
@@ -52,6 +54,7 @@ ciclo ventana diagrama pasos = do
  		     	Just (_ :-: _) -> pararse
  		     	Just (_ :|: _) -> (diagrama, pasos++[Primero])
     	 	"Right" -> case caminar pasos diagrama of
+    	 		Nothing -> pararse
     	 		Just (Hoja rectángulo) ->
     	 		     case dividir Vertical rectángulo of 
     	 		     	Nothing -> pararse
