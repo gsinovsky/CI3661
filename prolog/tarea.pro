@@ -1,3 +1,7 @@
+%% Proyecto PROLOG
+%% Gustavo Siñovsky 09-11207
+%% Jonathan Moreno 07-41249
+
 
 %% Definición de estructura en la que retornará la solución
 solucion(salto, x, y, movimientos(norte, sur, este, oeste)).
@@ -12,6 +16,7 @@ mismaLongitud([X,Y|Rest]) :-
   length(Y, Len), 
   mismaLongitud([Y|Rest]).
 
+
 %% Predicado para verificar que los elementos de  una lista sean numeros entre 0 y 9
 verificarNumero([]).
 verificarNumero([H|T]) :- 
@@ -20,10 +25,16 @@ verificarNumero([H|T]) :-
     H > 0,
     verificarNumero(T).
 
+
 %% Predicado tableroValido del enunciado
 tableroValido(Tablero) :-
  mismaLongitud(Tablero),
  maplist(verificarNumero, Tablero).
 
 
+%% Predicado saltoEnPosicion del enunciado
+saltoEnPosicion(Tablero, N, X, Y, Solucion).
 
+
+%% Predicado salto del enunciado
+salto(Tablero, N, Solucion).
