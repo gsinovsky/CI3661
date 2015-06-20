@@ -22,7 +22,7 @@ verificarNumero([]).
 verificarNumero([H|T]) :- 
     integer(H),
     H < 10,
-    H > 0,
+    H >= 0,
     verificarNumero(T).
 
 
